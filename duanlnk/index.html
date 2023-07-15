@@ -193,11 +193,11 @@
     <div class="dialog">
         <div class="dialog-content">
             <div class="dialog-header">
-                <span class="dialog-title">提示</span>
+                <span class="dialog-title">0</span>
                 <span class="dialog-close">&times;</span>
             </div>
             <div class="dialog-body">
-                <!-- <p>安全跳转：<span id="安全跳转"></span></p> -->
+                <!-- <p>短链接：<span id="shortUrl"></span></p> -->
             </div>
             <div class="dialog-footer">
                 <!-- 复制按钮 -->
@@ -208,17 +208,17 @@
         </div>
     </div>
     <div class="card">
-        <h2>安全跳转</h2>
+        <h2>0</h2>
         <div class="form-group">
-            <label for="url">长链接:</label>
-            <input type="text" id="url" name="url" placeholder="例：https://baidu.com" value="" />
-            <label for="shortStr">自定义路径:</label>
-            <input type="text" id="shortStr" name="shortStr" placeholder="例：bai/du 最前面不用加'/' 为空则自动生成一个路径" value="" />
-            <input type="button" id="submit" value="提交" />
+            <label for="url">0:</label>
+            <input type="text" id="url" name="url" placeholder="0" value="" />
+            <label for="shortStr">0:</label>
+            <input type="text" id="shortStr" name="shortStr" placeholder="0" value="" />
+            <input type="button" id="submit" value="0" />
         </div>
     </div>
     <footer>
-        <p>托管: <a href="https://xpdbk.com">1x000</a></p>
+        <p>0: <a href="https://xpdbk.com">1x000</a></p>
     </footer>
 
     <script>
@@ -228,7 +228,7 @@
         var submit = document.getElementById('submit');
         submit.onclick = function () {
             if (url.value == '') {
-                alert('链接');
+                alert('0');
                 return false;
             }
             fetch('/', {
@@ -246,14 +246,14 @@
                 else
                     throw res;
             }).then(function (data) {
-                // alert('提交成功，短链接为：' + data.data.shortUrl);
+                // alert('0：' + data.data.shortUrl);
                 // 在弹窗上显示短链接
 
                 dialog.querySelector('.dialog-body').innerHTML =
-                    `<p>短链接：<span id="shortUrl">${location.host}/${data.data.shortUrl}</span></p>`;
+                    `<p>0：<span id="shortUrl">${location.host}/${data.data.shortUrl}</span></p>`;
                 // 在弹窗上显示复制按钮
                 dialog.querySelector('.dialog-footer').innerHTML =
-                    `<button class="copy" id="copy">复制</button>`;
+                    `<button class="copy" id="copy">0</button>`;
 
                 // 复制按钮
                 var copy = document.getElementById('copy');
@@ -280,13 +280,13 @@
                 try {
                     data = await err.json();
                 } catch (e) {
-                    alert('提交失败，请检查网络');
+                    alert('0');
                     return false
                 }
                 console.log(data);
                 dialog.querySelector('.dialog-body').innerHTML = `<p>${data.msg}</p>`;
                 dialog.querySelector('.dialog-footer').innerHTML =
-                    `<button class="conform" id="conform">确定</button>`;
+                    `<button class="conform" id="conform">0</button>`;
                 var conform = document.getElementById('conform');
                 conform.onclick = function () {
                     dialog.classList.remove('dialog-show');
