@@ -1,1 +1,295 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible"content="IE=edge"><meta name="viewport"content="width=device-width, initial-scale=1.0"><title>0</title><style>body,html{margin:0;padding:0;height:100%;background-image:linear-gradient(-20deg,#d0b782 20%,#a0cecf 80%)}input[type=text]{border:none;text-align:center;outline:none}body{display:flex;justify-content:center;align-items:center}.card{width:800px;background-color:#ebedee;border-radius:10px;overflow:hidden;border:1px solid#9b9ea0}h2{text-align:center;background-color:#dbdfe0a8;margin:0;padding:10px;border-bottom:1px solid#9b9ea0;font-size:20px}.form-group{padding:5px 20px 20px 20px;box-sizing:border-box;width:100%}.form-group>label{width:100px;line-height:40px;font-size:18px}.form-group>input{width:100%;line-height:28px;font-size:18px;padding:8px;border-radius:5px;box-sizing:border-box}.form-group>#submit{width:75%;line-height:40px;font-size:18px;background-color:#61bee9;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:auto;margin-top:20px;display:block}.dialog{width:100%;height:100%;position:fixed;top:0;left:0;background-color:rgba(0,0,0,0.5);display:flex;opacity:0;justify-content:center;z-index:-1;transition:opacity.4s ease-out,all.2s;transform:translateZ(0)}.dialog-content{width:450px;margin-top:0;height:fit-content;background-color:#fff;border-radius:10px;overflow:hidden;border:1px solid#9b9ea0;transition:margin-top.4s ease-out}.dialog-content>.dialog-header{width:100%;padding:0 20px;box-sizing:border-box;line-height:56px;font-size:25px;border-bottom:1px solid#9b9ea0;display:flex;justify-content:space-between}.dialog-content>.dialog-header>.dialog-close{cursor:pointer;user-select:none}.dialog-content>.dialog-body{width:100%;padding:0 20px;box-sizing:border-box;border-bottom:1px solid#9b9ea0;font-size:19px}.dialog-content>.dialog-footer{width:100%;display:flex;justify-content:center;padding-bottom:20px}.dialog-content>.dialog-footer>button{width:90px;line-height:35px;font-size:18px;background-color:#61bee9;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:auto;margin-top:20px;display:block}.dialog-show{opacity:1;z-index:100}.dialog-show>.dialog-content{margin-top:20px}footer{position:fixed;bottom:5px;width:100%;text-align:center;font-size:18px}footer p{color:#666;margin:0;height:30px;line-height:30px}footer a{color:#666;text-decoration:none}footer a:hover{color:#61bee9;text-decoration:underline}</style></head><body><div class="dialog"><div class="dialog-content"><div class="dialog-header"><span class="dialog-title">0</span><span class="dialog-close">&times;</span></div><div class="dialog-body"><!--<p>短链接：<span id="shortUrl"></span></p>--></div><div class="dialog-footer"><!--复制按钮--><!--<button class="copy"id="copy">复制</button>--><!--确定按钮--><!--<button class="conform"id="conform">确定</button>--></div></div></div><div class="card"><h2>0</h2><div class="form-group"><label for="url">0:</label><input type="text"id="url"name="url"placeholder="0"value=""/><label for="shortStr">0:</label><input type="text"id="shortStr"name="shortStr"placeholder="0"value=""/><input type="button"id="submit"value="0"/></div></div><footer><p>0:<a href="https://xpdbk.com">1x000</a></p></footer><script>var dialog=document.querySelector('.dialog');var url=document.getElementById('url');var shortStr=document.getElementById('shortStr');var submit=document.getElementById('submit');submit.onclick=function(){if(url.value==''){alert('0');return false}fetch('/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url.value,shortStr:shortStr.value})}).then(function(res){if(res.ok)return res.json();else throw res;}).then(function(data){dialog.querySelector('.dialog-body').innerHTML=`<p>0：<span id="shortUrl">${location.host}/${data.data.shortUrl}</span></p>`;dialog.querySelector('.dialog-footer').innerHTML=`<button class="copy"id="copy">0</button>`;var copy=document.getElementById('copy');copy.onclick=function(){var shortUrl=document.querySelector('#shortUrl');try{let range=document.createRange();range.selectNode(shortUrl);window.getSelection().removeAllRanges();window.getSelection().addRange(range);document.execCommand('copy');window.getSelection().removeAllRanges();console.log('Copy success')}catch(e){console.log('Copy error')}}dialog.classList.add('dialog-show')}).catch(async function(err){console.log(err);let data;try{data=await err.json()}catch(e){alert('0');return false}console.log(data);dialog.querySelector('.dialog-body').innerHTML=`<p>${data.msg}</p>`;dialog.querySelector('.dialog-footer').innerHTML=`<button class="conform"id="conform">0</button>`;var conform=document.getElementById('conform');conform.onclick=function(){dialog.classList.remove('dialog-show')}dialog.classList.add('dialog-show')})}document.querySelector('.dialog-close').onclick=function(){dialog.classList.remove('dialog-show')}dialog.onclick=function(e){e.stopPropagation();if(e.target==dialog){dialog.classList.remove('dialog-show')}}</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-image: linear-gradient(-20deg, #d0b782 20%, #a0cecf 80%)
+        }
+
+        input[type=text] {
+            border: none;
+            text-align: center;
+            outline: none;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 800px;
+            background-color: #ebedee;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #9b9ea0;
+        }
+
+        h2 {
+            text-align: center;
+            background-color: #dbdfe0a8;
+            margin: 0;
+            padding: 10px;
+            border-bottom: 1px solid #9b9ea0;
+            font-size: 20px;
+        }
+
+        .form-group {
+            padding: 5px 20px 20px 20px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .form-group>label {
+            width: 100px;
+            line-height: 40px;
+            font-size: 18px;
+        }
+
+        .form-group>input {
+            width: 100%;
+            line-height: 28px;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group>#submit {
+            width: 75%;
+            line-height: 40px;
+            font-size: 18px;
+            background-color: #61bee9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: auto;
+            margin-top: 20px;
+            display: block;
+        }
+
+
+        .dialog {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            opacity: 0;
+            justify-content: center;
+            /* align-items: center; */
+            z-index: -1;
+            transition: opacity .4s ease-out, all .2s;
+            transform: translateZ(0);
+        }
+
+        .dialog-content {
+            width: 450px;
+            margin-top: 0;
+            height: fit-content;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #9b9ea0;
+            transition: margin-top .4s ease-out;
+        }
+
+        .dialog-content>.dialog-header {
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+            line-height: 56px;
+            font-size: 25px;
+            border-bottom: 1px solid #9b9ea0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .dialog-content>.dialog-header>.dialog-close {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .dialog-content>.dialog-body {
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #9b9ea0;
+            font-size: 19px;
+        }
+
+        .dialog-content>.dialog-footer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+
+        .dialog-content>.dialog-footer>button {
+            width: 90px;
+            line-height: 35px;
+            font-size: 18px;
+            background-color: #61bee9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: auto;
+            margin-top: 20px;
+            display: block;
+        }
+
+        .dialog-show {
+            opacity: 1;
+            z-index: 100;
+        }
+
+        .dialog-show>.dialog-content {
+            margin-top: 20px;
+        }
+        footer{
+            position: fixed;
+            bottom: 5px;
+            width: 100%;;
+            text-align: center;
+            
+            font-size: 18px;
+        }
+        footer p{
+            color: #666;
+            margin: 0;
+            height: 30px;
+            line-height: 30px;
+        }
+        footer a{
+            color: #666;
+            text-decoration: none;
+        }
+        footer a:hover{
+            color: #61bee9;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dialog">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <span class="dialog-title">0</span>
+                <span class="dialog-close">&times;</span>
+            </div>
+            <div class="dialog-body">
+            </div>
+            <div class="dialog-footer">
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <h2>0</h2>
+        <div class="form-group">
+            <label for="url">0:</label>
+            <input type="text" id="url" name="url" placeholder="0" value="" />
+            <label for="shortStr">0:</label>
+            <input type="text" id="shortStr" name="shortStr" placeholder="0" value="" />
+            <input type="button" id="submit" value="0" />
+        </div>
+    </div>
+    <footer>
+        <p>0: <a href="https://xpdbk.com">1x000</a></p>
+    </footer>
+
+    <script>
+        var dialog = document.querySelector('.dialog');
+        var url = document.getElementById('url');
+        var shortStr = document.getElementById('shortStr');
+        var submit = document.getElementById('submit');
+        submit.onclick = function () {
+            if (url.value == '') {
+                alert('0');
+                return false;
+            }
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    url: url.value,
+                    shortStr: shortStr.value
+                })
+            }).then(function (res) {
+                if (res.ok)
+                    return res.json();
+                else
+                    throw res;
+            }).then(function (data) {
+                // alert('0：' + data.data.shortUrl);
+
+                dialog.querySelector('.dialog-body').innerHTML =
+                    `<p>0：<span id="shortUrl">${location.host}/${data.data.shortUrl}</span></p>`;
+                dialog.querySelector('.dialog-footer').innerHTML =
+                    `<button class="copy" id="copy">0</button>`;
+
+                var copy = document.getElementById('copy');
+                copy.onclick = function () {
+                    var shortUrl = document.querySelector('#shortUrl');
+                    try {
+                        let range = document.createRange();
+                        range.selectNode(shortUrl);
+                        window.getSelection().removeAllRanges();
+                        window.getSelection().addRange(range);
+                        document.execCommand('copy');
+                        window.getSelection().removeAllRanges();
+                        console.log('Copy success')
+                    } catch (e) {
+                        console.log('Copy error')
+                    }
+                }
+                dialog.classList.add('dialog-show');
+            }).catch(async function (err) {
+                console.log(err);
+                let data;
+                try {
+                    data = await err.json();
+                } catch (e) {
+                    alert('0');
+                    return false
+                }
+                console.log(data);
+                dialog.querySelector('.dialog-body').innerHTML = `<p>${data.msg}</p>`;
+                dialog.querySelector('.dialog-footer').innerHTML =
+                    `<button class="conform" id="conform">0</button>`;
+                var conform = document.getElementById('conform');
+                conform.onclick = function () {
+                    dialog.classList.remove('dialog-show');
+                }
+                dialog.classList.add('dialog-show');
+            })
+        }
+        document.querySelector('.dialog-close').onclick = function () {
+            dialog.classList.remove('dialog-show');
+        }
+        dialog.onclick = function (e) {
+            e.stopPropagation();
+            if (e.target == dialog) {
+                dialog.classList.remove('dialog-show');
+            }
+        }
+    </script>
+</body>
+
+</html>
