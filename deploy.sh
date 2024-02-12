@@ -1,16 +1,21 @@
-echo 当前目录是：%cd%
-echo;
- 
-echo 开始添加变更：git add .
+#!/bin/bash
+echo "当前目录：$(pwd)"
+echo
+
+echo "正在执行：git add ."
 git add .
-echo;
- 
-set /p declation=输入提交的commit信息:
-git commit -m "%declation%"
-echo;
- 
-echo 本地分支拉取远程主分支：git pull origin master
+echo
+
+read -p "请输入 commit 的信息：" message
+git commit -m "$message"
+echo
+
+echo "正在执行：git pull origin main"
+git pull origin main
+echo
+
+echo "正在执行：git push origin main"
 git push origin main
-echo;
- 
-pause
+echo
+
+read -p "按任意键继续..." -n1 -s
