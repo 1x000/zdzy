@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			success(res) {
 				if (!res.data) {
 					if (Joe.BAIDU_PUSH) {
-						$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">检测失败，提交收录</a>`);
+						$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">ການກວດຫາບໍ່ສຳເລັດ, ສົ່ງເພື່ອຮວມ</a>`);
 						return
 					}
 					const url = `https://ziyuan.baidu.com/linksubmit/url?sitename=${encodeURI(window.location.href)}`;
-					$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">检测失败，提交收录</a>`);
+					$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">ການກວດຫາບໍ່ສຳເລັດ, ສົ່ງເພື່ອຮວມ</a>`);
 					return
 				}
 				if (res.data == '未收录，已推送') {
@@ -42,11 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
 					return
 				}
 				if (Joe.BAIDU_PUSH) {
-					$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}，提交收录</a>`);
+					$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}, ສົ່ງສໍາລັບການລວມ</a>`);
 					return
 				}
 				const url = `https://ziyuan.baidu.com/linksubmit/url?sitename=${encodeURI(window.location.href)}`;
-				$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}，提交收录</a>`);
+				$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}, ສົ່ງສໍາລັບການລວມ</a>`);
 			}
 		});
 	}
