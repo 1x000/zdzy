@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	/* 当前页的CID */
 	const cid = $('.joe_detail').attr('data-cid');
+	window.cid = cid;
 
 	/* 获取本篇文章百度收录情况 */
 	{
@@ -11,40 +12,42 @@ document.addEventListener('DOMContentLoaded', () => {
 			url: Joe.BASE_API,
 			type: 'POST',
 			dataType: 'json',
-			data: { routeType: 'baidu_record', site: window.location.href },
+			data: {
+				routeType: 'baidu_record',
+				site: window.location.href,
+				cid: cid
+			},
 			success(res) {
-				if (res.data && res.data === '已收录') {
+				if (!res.data) {
+					if (Joe.BAIDU_PUSH) {
+						$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">检测失败，提交收录</a>`);
+						return
+					}
+					const url = `https://ziyuan.baidu.com/linksubmit/url?sitename=${encodeURI(window.location.href)}`;
+					$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">检测失败，提交收录</a>`);
+					return
+				}
+				if (res.data == '未收录，已推送') {
+					$('#Joe_Baidu_Record').css('color', '#67C23A');
+					$('#Joe_Baidu_Record').html(res.data);
+					return
+				}
+				if (res.data == '已收录') {
 					$('#Joe_Baidu_Record').css('color', '#67C23A');
 					$('#Joe_Baidu_Record').html('已收录');
-				} else {
-					/* 如果填写了Token，则自动推送给百度 */
-					if (Joe.BAIDU_PUSH) {
-						$('#Joe_Baidu_Record').html('<span style="color: #E6A23C">未收录，推送中...</span>');
-						const _timer = setTimeout(function () {
-							$.ajax({
-								url: Joe.BASE_API,
-								type: 'POST',
-								dataType: 'json',
-								data: {
-									routeType: 'baidu_push',
-									domain: window.location.protocol + '//' + window.location.hostname,
-									url: encodeURI(window.location.href)
-								},
-								success(res) {
-									if (res.data.error) {
-										$('#Joe_Baidu_Record').html('<span style="color: #F56C6C">推送失败，请检查！</span>');
-									} else {
-										$('#Joe_Baidu_Record').html('<span style="color: #67C23A">推送成功！</span>');
-									}
-								}
-							});
-							clearTimeout(_timer);
-						}, 1000);
-					} else {
-						const url = `https://ziyuan.baidu.com/linksubmit/url?sitename=${encodeURI(window.location.href)}`;
-						$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">NOSHOULU</a>`);
-					}
+					return
 				}
+				/* 如果填写了Token，则自动推送给百度 */
+				if ((res.data == '未收录') && (Joe.BAIDU_PUSH)) {
+					submit_baidu('未收录，推送中...');
+					return
+				}
+				if (Joe.BAIDU_PUSH) {
+					$('#Joe_Baidu_Record').html(`<a href="javascript:submit_baidu();" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}，提交收录</a>`);
+					return
+				}
+				const url = `https://ziyuan.baidu.com/linksubmit/url?sitename=${encodeURI(window.location.href)}`;
+				$('#Joe_Baidu_Record').html(`<a target="_blank" href="${url}" rel="noopener noreferrer nofollow" style="color: #F56C6C">${res.data}，提交收录</a>`);
 			}
 		});
 	}
@@ -54,36 +57,68 @@ document.addEventListener('DOMContentLoaded', () => {
 		Prism.highlightAll();
 		$("pre[class*='language-']").each(function (index, item) {
 			let text = $(item).find("code[class*='language-']").text();
+			text = text.replace(/    /g, '	');
 			let span = $(`<span class="copy"><i class="fa fa-clone"></i></span>`);
-			new ClipboardJS(span[0], { text: () => text }).on('success', () => Qmsg.success('复制成功！'));
+			new ClipboardJS(span[0], {
+				text: () => text
+			}).on('success', () => {
+				window.code_copy = true;
+				Qmsg.success(`复制成功 内容版权属于 ${Joe.TITLE} 转载请标明出处！`, { 'showClose': true, 'autoClose': false });
+			});
 			$(item).append(span);
+		});
+	}
+
+	/* 监听网页复制行为 */
+	{
+		document.addEventListener("copy", function (e) {
+			setTimeout(function () {
+				if (window.code_copy !== true && window.post_copy !== true) {
+					let options = {
+						'showClose': true,
+						'autoClose': false
+					}
+					Qmsg.warning(`本文版权属于 ${Joe.TITLE} 转载请标明出处！`, options)
+					window.post_copy = true;
+				}
+				window.code_copy = false;
+			}, 100);
 		});
 	}
 
 	/* 激活图片预览功能 */
 	{
 		$('.joe_detail__article img:not(img.owo_image)').each(function () {
-			$(this).wrap($(`<span style="display: block;" data-fancybox="Joe" href="${$(this).attr('src')}"></span>`));
+			$(this).wrap($(
+				`<span style="display: block;" data-fancybox="Joe" href="${$(this).attr('src')}"></span>`
+			));
 		});
 	}
 
 	/* 设置文章内的链接为新窗口打开 */
 	{
 		$('.joe_detail__article a:not(.joe_detail__article-anote)').each(function () {
-			$(this).attr({ target: '_blank', rel: 'noopener noreferrer nofollow' });
+			$(this).attr({
+				target: '_blank',
+				rel: 'noopener noreferrer nofollow'
+			});
 		});
 	}
 
 	/* 激活浏览功能 */
 	{
-		let viewsArr = localStorage.getItem(encryption('views')) ? JSON.parse(decrypt(localStorage.getItem(encryption('views')))) : [];
+		let viewsArr = localStorage.getItem(encryption('views')) ? JSON.parse(decrypt(localStorage.getItem(
+			encryption('views')))) : [];
 		const flag = viewsArr.includes(cid);
 		if (!flag) {
 			$.ajax({
 				url: Joe.BASE_API,
 				type: 'POST',
 				dataType: 'json',
-				data: { routeType: 'handle_views', cid },
+				data: {
+					routeType: 'handle_views',
+					cid
+				},
 				success(res) {
 					if (res.code !== 1) return;
 					$('#Joe_Article_Views').html(`${res.data.views} 阅读`);
@@ -98,20 +133,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	/* 激活文章点赞功能 */
 	{
-		let agreeArr = localStorage.getItem(encryption('agree')) ? JSON.parse(decrypt(localStorage.getItem(encryption('agree')))) : [];
+		let agreeArr = localStorage.getItem(encryption('agree')) ? JSON.parse(decrypt(localStorage.getItem(
+			encryption('agree')))) : [];
 		if (agreeArr.includes(cid)) $('.joe_detail__agree .icon-1').addClass('active');
 		else $('.joe_detail__agree .icon-2').addClass('active');
 		let _loading = false;
 		$('.joe_detail__agree .icon').on('click', function () {
 			if (_loading) return;
 			_loading = true;
-			agreeArr = localStorage.getItem(encryption('agree')) ? JSON.parse(decrypt(localStorage.getItem(encryption('agree')))) : [];
+			agreeArr = localStorage.getItem(encryption('agree')) ? JSON.parse(decrypt(localStorage
+				.getItem(encryption('agree')))) : [];
 			let flag = agreeArr.includes(cid);
 			$.ajax({
 				url: Joe.BASE_API,
 				type: 'POST',
 				dataType: 'json',
-				data: { routeType: 'handle_agree', cid, type: flag ? 'disagree' : 'agree' },
+				data: {
+					routeType: 'handle_agree',
+					cid,
+					type: flag ? 'disagree' : 'agree'
+				},
 				success(res) {
 					if (res.code !== 1) return;
 					$('.joe_detail__agree .text').html(res.data.agree);
@@ -183,7 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			$('.joe_detail__article-video .episodes .item').on('click', function () {
 				$(this).addClass('active').siblings().removeClass('active');
 				const url = $(this).attr('data-src');
-				$('.joe_detail__article-video .play iframe').attr({ src: player + url });
+				let alt = $(this).attr('alt');
+				$('.joe_detail__article-video .play iframe').attr({
+					src: player + url + '&autoplay=1&screenshot=1&theme=' + encodeURIComponent(getComputedStyle(document.documentElement).getPropertyValue('--theme').trim())
+				});
+				alt ? $('.joe_detail__article-video .play .title').html(alt) : null;
 			});
 			$('.joe_detail__article-video .episodes .item').first().click();
 		}
@@ -207,7 +252,6 @@ window.addEventListener('load', function () {
 	{
 		const scroll = new URLSearchParams(location.search).get('scroll');
 		if (scroll) {
-			const height = $('.joe_header').height();
 			let elementEL = null;
 			if ($('#' + scroll).length > 0) {
 				elementEL = $('#' + scroll);
@@ -215,9 +259,57 @@ window.addEventListener('load', function () {
 				elementEL = $('.' + scroll);
 			}
 			if (elementEL && elementEL.length > 0) {
-				const top = elementEL.offset().top - height - 15;
-				window.scrollTo({ top, behavior: 'smooth' });
+				const top = elementEL.offset().top - $('.joe_header').height() - 15;
+				window.scrollTo({
+					top,
+					behavior: 'smooth'
+				});
 			}
 		}
 	}
 });
+
+function submit_baidu(msg = '推送中...') {
+	$('#Joe_Baidu_Record').html(`<span style="color: #E6A23C">${msg}</span>`);
+	$.ajax({
+		url: Joe.BASE_API,
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			routeType: 'baidu_push',
+			domain: window.location.protocol + '//' + window
+				.location.hostname,
+			url: encodeURI(window.location.href),
+			cid: window.cid
+		},
+		success(res) {
+			if (res.already) {
+				$('#Joe_Baidu_Record').css('color', '#67C23A');
+				$('#Joe_Baidu_Record').html('已推送');
+				return
+			}
+			if (res.data.error) {
+				if (res.data.message == 'over quota') res.data.message = '超过配额';
+				$('#Joe_Baidu_Record').html('<span style="color: #F56C6C">推送失败，' + res.data.message + '</span>');
+			} else {
+				$('#Joe_Baidu_Record').html('<span style="color: #67C23A">推送成功！还可推送' + res.data.remain + '条</span>');
+			}
+		},
+		error(res) {
+			$('#Joe_Baidu_Record').html('<span style="color: #F56C6C">推送失败，请检查！</span>');
+		}
+	});
+	// 	顺便推送URL到必应
+	if (!Joe.BAIDU_PUSH) return;
+	$.ajax({
+		url: Joe.BASE_API,
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			routeType: 'bing_push',
+			domain: window.location.protocol + '//' + window
+				.location.hostname,
+			url: encodeURI(window.location.href)
+		}
+	});
+}
